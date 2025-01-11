@@ -1108,6 +1108,12 @@ async function processMod(): Promise<void> {
         row: getItemRow(proto),
         icon: await getIcon(proto),
       };
+      if (proto.weight) {
+        item.rocketCapacity = Math.floor(
+          dataRaw['utility-constants'].default.rocket_lift_weight /
+            proto.weight,
+        );
+      }
 
       if (proto.place_result) {
         let result = proto.place_result;

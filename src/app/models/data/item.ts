@@ -15,6 +15,7 @@ export interface ItemJson {
   category: string;
   row: number;
   stack?: number;
+  rocketCapacity?: number;
   beacon?: BeaconJson;
   belt?: BeltJson;
   pipe?: BeltJson;

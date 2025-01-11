@@ -93,6 +93,7 @@ export interface DataRawDump {
   tile: Entities<M.TilePrototype>;
   tool: Entities<M.ToolPrototype>;
   'transport-belt': Entities<M.TransportBeltPrototype>;
+  'utility-constants': { default: M.UtilityConstants };
 }
 
 export interface Locale {
