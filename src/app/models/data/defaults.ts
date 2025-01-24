@@ -39,6 +39,7 @@ export interface PresetJson {
    * ID in `src/assets/i18n/*.json`
    * Example: "options.preset.minimum"
    */
+  id: string;
   label: string;
 
   locations?: string[];

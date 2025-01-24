@@ -33,7 +33,7 @@ import { ItemId } from '~/models/enum/item-id';
 import { linkValueOptions } from '~/models/enum/link-value';
 import { MaximizeType } from '~/models/enum/maximize-type';
 import { objectiveUnitOptions } from '~/models/enum/objective-unit';
-import { Preset, presetOptions } from '~/models/enum/preset';
+import { Preset, BuiltinPreset, presetOptions } from '~/models/enum/preset';
 import {
   baseId,
   itemHasQuality,
@@ -104,7 +104,7 @@ export type PartialSettingsState = Partial<Omit<SettingsState, 'costs'>> & {
 
 export const initialSettingsState: SettingsState = {
   checkedObjectiveIds: new Set(),
-  preset: Preset.Minimum,
+  preset: BuiltinPreset.Minimum,
   maximizeType: MaximizeType.Ratio,
   requireMachinesOutput: false,
   displayRate: DisplayRate.PerMinute,
@@ -344,7 +344,7 @@ export class SettingsService extends Store<SettingsState> {
 
     const m = mod.defaults;
     if ('presets' in m) {
-      const p = m.presets[preset] ?? m.presets[0] ?? {};
+      const p = m.presets.find((p) => p.id == preset) ?? m.presets[0] ?? {};
       let beacons: BeaconSettings[] = [];
       const beaconId = coalesce(p.beacon, m.beacon);
       if (beaconId) {
@@ -386,7 +386,8 @@ export class SettingsService extends Store<SettingsState> {
     let overclock: Rational | undefined;
     switch (mod.game) {
       case Game.Factorio: {
-        moduleRank = preset === Preset.Minimum ? undefined : m.moduleRank;
+        moduleRank =
+          preset === BuiltinPreset.Minimum ? undefined : m.moduleRank;
         if (m.beacon) {
           const beacon = mod.items.find((i) => i.id === m.beacon)?.beacon;
           if (beacon) {
@@ -399,9 +400,9 @@ export class SettingsService extends Store<SettingsState> {
             ];
 
             const count =
-              preset < Preset.Beacon8
+              preset == BuiltinPreset.Minimum || preset == BuiltinPreset.Modules
                 ? rational.zero
-                : preset === Preset.Beacon8
+                : preset === BuiltinPreset.Beacon8
                   ? rational(8n)
                   : rational(12n);
             beacons = [{ count, id, modules }];
@@ -410,7 +411,8 @@ export class SettingsService extends Store<SettingsState> {
         break;
       }
       case Game.DysonSphereProgram: {
-        moduleRank = preset === Preset.Beacon8 ? m.moduleRank : undefined;
+        moduleRank =
+          preset === BuiltinPreset.Beacon8 ? m.moduleRank : undefined;
         break;
       }
       case Game.Satisfactory: {
@@ -425,10 +427,10 @@ export class SettingsService extends Store<SettingsState> {
     }
 
     const machineRankIds =
-      preset === Preset.Minimum ? m.minMachineRank : m.maxMachineRank;
+      preset === BuiltinPreset.Minimum ? m.minMachineRank : m.maxMachineRank;
     return {
-      beltId: preset === Preset.Minimum ? m.minBelt : m.maxBelt,
-      pipeId: preset === Preset.Minimum ? m.minPipe : m.maxPipe,
+      beltId: preset === BuiltinPreset.Minimum ? m.minBelt : m.maxBelt,
+      pipeId: preset === BuiltinPreset.Minimum ? m.minPipe : m.maxPipe,
       cargoWagonId: m.cargoWagon,
       fluidWagonId: m.fluidWagon,
       excludedRecipeIds: coalesce(m.excludedRecipes, []),

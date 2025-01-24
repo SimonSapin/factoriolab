@@ -15,6 +15,7 @@
   "pipe": "pump",
   "presets": [
     {
+      "id": "m",
       "label": "options.preset.minimum",
       "belt": "transport-belt",
       "moduleRank": [],
@@ -25,14 +26,17 @@
       ]
     },
     {
+      "id": "u",
       "label": "options.preset.upgraded",
       "moduleRank": []
     },
     {
+      "id": "b2",
       "label": "options.preset.beacon2",
       "beaconCount": 2
     },
     {
+      "id": "l",
       "label": "options.quality.legendary",
       "machineRank": [
         "electric-mining-drill(5)",
